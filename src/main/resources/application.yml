@@ -1,0 +1,11 @@
+spring:
+  profiles:
+    active: local
+
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+
+
