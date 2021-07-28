@@ -9,6 +9,9 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
+/**
+ * 인터파크의 책 정보를 호출한다.
+ */
 @RequiredArgsConstructor
 @Slf4j
 @Component
@@ -23,6 +26,9 @@ public class InterparkClient {
         return interparkResponseDto;
     }
 
+    /**
+     * 인기 책을 리턴한다.
+     */
     private String findPopularBooks() {
         String items = null;
         try {
