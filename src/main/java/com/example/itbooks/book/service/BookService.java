@@ -1,7 +1,7 @@
 package com.example.itbooks.book.service;
 
-import com.example.itbooks.book.dto.InterparkResponseDto;
-import com.example.itbooks.book.infra.InterparkClient;
+import com.example.itbooks.book.dto.BookResponseDto;
+import com.example.itbooks.book.infra.BookClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,12 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class BookService {
-    private final InterparkClient interparkClient;
+    private final BookClient bookClient;
 
     /**
      * 인기 책을 리턴한다.
      */
-    public InterparkResponseDto getPopularBooks() {
-        return interparkClient.getPopularBooks();
+    public BookResponseDto getPopularBooks() {
+        return bookClient.getPopularBooks();
     }
 }

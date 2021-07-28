@@ -1,6 +1,6 @@
 package com.example.itbooks.book.ui;
 
-import com.example.itbooks.book.dto.InterparkResponseDto;
+import com.example.itbooks.book.dto.BookResponseDto;
 import com.example.itbooks.book.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +20,7 @@ public class BookController {
      * 인기 책을 리턴한다.
      */
     @GetMapping("/popular")
-    public InterparkResponseDto popular() {
+    public BookResponseDto getPopularBooks() {
         return bookService.getPopularBooks();
     }
 }

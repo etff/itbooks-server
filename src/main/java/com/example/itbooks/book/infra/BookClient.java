@@ -1,6 +1,6 @@
 package com.example.itbooks.book.infra;
 
-import com.example.itbooks.book.dto.InterparkResponseDto;
+import com.example.itbooks.book.dto.BookResponseDto;
 import com.example.itbooks.global.properties.InterparkProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -15,15 +15,15 @@ import org.springframework.web.reactive.function.client.WebClient;
 @RequiredArgsConstructor
 @Slf4j
 @Component
-public class InterparkClient {
+public class BookClient {
     private static final int IT_CATEGORY = 122;
     private final InterparkProperties properties;
     private final WebClient webClient;
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    public InterparkResponseDto getPopularBooks() {
-        InterparkResponseDto interparkResponseDto = convertToResponse(findPopularBooks());
-        return interparkResponseDto;
+    public BookResponseDto getPopularBooks() {
+        BookResponseDto bookResponseDto = convertToResponse(findPopularBooks());
+        return bookResponseDto;
     }
 
     /**
@@ -46,13 +46,13 @@ public class InterparkClient {
         return items;
     }
 
-    private InterparkResponseDto convertToResponse(String textData) {
-        InterparkResponseDto interparkResponseDto = new InterparkResponseDto();
+    private BookResponseDto convertToResponse(String textData) {
+        BookResponseDto bookResponseDto = new BookResponseDto();
         try {
-            interparkResponseDto = objectMapper.readValue(textData, InterparkResponseDto.class);
+            bookResponseDto = objectMapper.readValue(textData, BookResponseDto.class);
         } catch (Exception e) {
             log.info(e.getMessage());
         }
-        return interparkResponseDto;
+        return bookResponseDto;
     }
 }
