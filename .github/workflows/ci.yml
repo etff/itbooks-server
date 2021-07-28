@@ -7,7 +7,7 @@ on:
   push:
     branches: [ develop ]
   pull_request:
-    branches: [ develop ]
+    branches: [ "**" ]
 
 jobs:
   build:
@@ -21,6 +21,12 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
+      - name: properties
+        env:
+          INTERPARK_API_KEY: ${{ secrets.INTERPARK_API_KEY }}
+        run: |
+          mkdir src/main/resources/properties
+          echo $INTERPARK_API_KEY >> src/main/resources/properties/interpark.properties
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
