@@ -9,6 +9,8 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 public class BookResponseDto {
+    private static final int MAXIMUM_ITEM_SHOW = 10;
+
     private String title;
     private String link;
     private String language;
@@ -47,6 +49,6 @@ public class BookResponseDto {
     }
 
     public List<ItemResponseDto> getItem() {
-        return item.subList(0, 8);
+        return item.size() > MAXIMUM_ITEM_SHOW ? item.subList(0, 8) : item;
     }
 }
