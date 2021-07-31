@@ -1,13 +1,13 @@
 package com.example.itbooks.book.dto;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @NoArgsConstructor
-@Data
+@Getter
 public class BookResponseDto {
     private String title;
     private String link;
@@ -44,5 +44,9 @@ public class BookResponseDto {
         this.returnCode = returnCode;
         this.returnMessage = returnMessage;
         this.item = item;
+    }
+
+    public List<ItemResponseDto> getItem() {
+        return item.subList(0, 8);
     }
 }
