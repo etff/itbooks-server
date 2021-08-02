@@ -1,5 +1,6 @@
 package com.example.itbooks.book.infra;
 
+import com.example.itbooks.book.domain.SearchType;
 import com.example.itbooks.book.dto.BookResponseDto;
 import com.example.itbooks.global.properties.InterparkProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,7 +28,16 @@ public class BookClient {
      * 인기 책을 리턴한다.
      */
     public BookResponseDto getPopularBooks() {
-        return convertToResponse(findPopularBooks());
+        final String url = SearchType.POPULAR.getUrl();
+        return convertToResponse(findBooks(url));
+    }
+
+    /**
+     * 추천 책을 리턴한다.
+     */
+    public BookResponseDto getRecommendBooks() {
+        final String url = SearchType.RECOMMEND.getUrl();
+        return convertToResponse(findBooks(url));
     }
 
     /**
@@ -39,11 +49,11 @@ public class BookClient {
         return convertToResponse(findBook(id));
     }
 
-    private String findPopularBooks() {
+    private String findBooks(String searchType) {
         String items = null;
         try {
             items = webClient.get()
-                    .uri(builder -> builder.path("/bestSeller.api")
+                    .uri(builder -> builder.path(searchType)
                             .queryParam("categoryId", IT_CATEGORY)
                             .queryParam("output", "json")
                             .queryParam("key", properties.getKey()).build())
@@ -60,7 +70,7 @@ public class BookClient {
         String items = null;
         try {
             items = webClient.get()
-                    .uri(builder -> builder.path("/search.api")
+                    .uri(builder -> builder.path(SearchType.BOOK_ID.getUrl())
                             .queryParam("query", id)
                             .queryParam("queryType", PRODUCT_NUMBER)
                             .queryParam("categoryId", IT_CATEGORY)

@@ -32,4 +32,12 @@ public class BookController {
     public BookResponseDto getBook(@PathVariable Long id) {
         return bookService.getBook(id);
     }
+
+    /**
+     * 추천 책을 리턴한다.
+     */
+    @GetMapping("/recommend")
+    public BookResponseDto getRecommendBooks() {
+        return bookService.getRecommendBooks();
+    }
 }

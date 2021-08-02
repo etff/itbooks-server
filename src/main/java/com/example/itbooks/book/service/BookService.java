@@ -30,4 +30,11 @@ public class BookService {
     public BookResponseDto getBook(Long id) {
         return bookClient.getBook(id);
     }
+
+    /**
+     * 추천 책을 리턴한다.
+     */
+    public BookResponseDto getRecommendBooks() {
+        return bookClient.getRecommendBooks();
+    }
 }
