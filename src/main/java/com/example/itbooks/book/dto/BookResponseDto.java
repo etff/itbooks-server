@@ -24,12 +24,13 @@ public class BookResponseDto {
     private String queryType;
     private Long searchCategoryId;
     private String searchCategoryName;
+    private String query;
     private String returnCode;
     private String returnMessage;
     private List<ItemResponseDto> item;
 
     @Builder
-    public BookResponseDto(String title, String link, String language, String copyright, String pubDate, String imageUrl, Long totalResults, Integer startIndex, Integer itemsPerPage, Integer maxResults, String queryType, Long searchCategoryId, String searchCategoryName, String returnCode, String returnMessage, List<ItemResponseDto> item) {
+    public BookResponseDto(String title, String link, String language, String copyright, String pubDate, String imageUrl, Long totalResults, Integer startIndex, Integer itemsPerPage, Integer maxResults, String queryType, Long searchCategoryId, String searchCategoryName, String query, String returnCode, String returnMessage, List<ItemResponseDto> item) {
         this.title = title;
         this.link = link;
         this.language = language;
@@ -43,6 +44,7 @@ public class BookResponseDto {
         this.queryType = queryType;
         this.searchCategoryId = searchCategoryId;
         this.searchCategoryName = searchCategoryName;
+        this.query = query;
         this.returnCode = returnCode;
         this.returnMessage = returnMessage;
         this.item = item;

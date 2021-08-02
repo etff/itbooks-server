@@ -14,8 +14,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -75,6 +77,51 @@ class BookControllerTest {
             @Test
             void It_responds_ok_with_empty_books() throws Exception {
                 mockMvc.perform(get("/api/v1/books/popular"))
+                        .andExpect(status().isOk())
+                        .andExpect(content().string(containsString("")));
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName("GET /id 는")
+    class Describe_getBook {
+        Integer bookId = 1;
+
+        @Nested
+        @DisplayName("주어진 책이 있으면")
+        class Context_with_book {
+            BookResponseDto bookResponse;
+
+            @BeforeEach
+            void setUp() {
+                ItemResponseDto item1 = ItemResponseDto.builder()
+                        .title("clean code")
+                        .build();
+                bookResponse = BookResponseDto.builder()
+                        .item(Collections.singletonList(item1))
+                        .build();
+                given(bookService.getBook(anyLong()))
+                        .willReturn(bookResponse);
+            }
+
+            @DisplayName("200 OK 상태와 책을 응답한다.")
+            @Test
+            void It_responds_ok_with_book() throws Exception {
+                mockMvc.perform(get("/api/v1/books/{id}", bookId))
+                        .andExpect(status().isOk())
+                        .andExpect(content().string(objectMapper.writeValueAsString(bookResponse)));
+            }
+        }
+
+        @Nested
+        @DisplayName("주어진 책이 없으면")
+        class Context_without_book {
+
+            @DisplayName("200 OK 상태와 비어있는 책을 응답한다.")
+            @Test
+            void It_responds_ok_with_empty_book() throws Exception {
+                mockMvc.perform(get("/api/v1/books/{id}", bookId))
                         .andExpect(status().isOk())
                         .andExpect(content().string(containsString("")));
             }

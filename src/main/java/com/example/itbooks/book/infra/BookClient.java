@@ -17,23 +17,52 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Component
 public class BookClient {
     private static final int IT_CATEGORY = 122;
+    private static final String PRODUCT_NUMBER = "productNumber";
+
     private final InterparkProperties properties;
     private final WebClient webClient;
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    public BookResponseDto getPopularBooks() {
-        BookResponseDto bookResponseDto = convertToResponse(findPopularBooks());
-        return bookResponseDto;
-    }
-
     /**
      * 인기 책을 리턴한다.
      */
+    public BookResponseDto getPopularBooks() {
+        return convertToResponse(findPopularBooks());
+    }
+
+    /**
+     * 찾고자 하는 책을 리턴한다.
+     *
+     * @param id 책의 식별자
+     */
+    public BookResponseDto getBook(Long id) {
+        return convertToResponse(findBook(id));
+    }
+
     private String findPopularBooks() {
         String items = null;
         try {
             items = webClient.get()
                     .uri(builder -> builder.path("/bestSeller.api")
+                            .queryParam("categoryId", IT_CATEGORY)
+                            .queryParam("output", "json")
+                            .queryParam("key", properties.getKey()).build())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .retrieve()
+                    .bodyToMono(String.class).block();
+        } catch (Exception e) {
+            log.info(e.getMessage());
+        }
+        return items;
+    }
+
+    private String findBook(Long id) {
+        String items = null;
+        try {
+            items = webClient.get()
+                    .uri(builder -> builder.path("/search.api")
+                            .queryParam("query", id)
+                            .queryParam("queryType", PRODUCT_NUMBER)
                             .queryParam("categoryId", IT_CATEGORY)
                             .queryParam("output", "json")
                             .queryParam("key", properties.getKey()).build())
