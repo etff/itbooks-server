@@ -4,6 +4,7 @@ import com.example.itbooks.book.dto.BookResponseDto;
 import com.example.itbooks.book.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,5 +23,13 @@ public class BookController {
     @GetMapping("/popular")
     public BookResponseDto getPopularBooks() {
         return bookService.getPopularBooks();
+    }
+
+    /**
+     * 찾고자하는 책을 리턴한다.
+     */
+    @GetMapping("/{id}")
+    public BookResponseDto getBook(@PathVariable Long id) {
+        return bookService.getBook(id);
     }
 }

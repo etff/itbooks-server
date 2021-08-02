@@ -21,4 +21,13 @@ public class BookService {
     public BookResponseDto getPopularBooks() {
         return bookClient.getPopularBooks();
     }
+
+    /**
+     * 찾고자 하는 책을 리턴한다.
+     *
+     * @param id 책의 식별자
+     */
+    public BookResponseDto getBook(Long id) {
+        return bookClient.getBook(id);
+    }
 }
