@@ -37,4 +37,11 @@ public class BookService {
     public BookResponseDto getRecommendBooks() {
         return bookClient.getRecommendBooks();
     }
+
+    /**
+     * 새로 발간된 책을 리턴한다.
+     */
+    public BookResponseDto getNewBooks() {
+        return bookClient.getNewBooks();
+    }
 }

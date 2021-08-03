@@ -15,7 +15,10 @@ public enum SearchType {
     /**
      * 책 검색
      */
-    BOOK_ID("/search.api");
+    BOOK_ID("/search.api"),
+
+    NEW_BOOK("/newBook.api");
+
 
     private String url;
 

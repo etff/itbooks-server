@@ -49,6 +49,11 @@ public class BookClient {
         return convertToResponse(findBook(id));
     }
 
+    public BookResponseDto getNewBooks() {
+        final String url = SearchType.NEW_BOOK.getUrl();
+        return convertToResponse(findBooks(url));
+    }
+
     private String findBooks(String searchType) {
         String items = null;
         try {
