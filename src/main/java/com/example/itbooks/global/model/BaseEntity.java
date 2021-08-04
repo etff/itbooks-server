@@ -1,4 +1,4 @@
-package com.example.itbooks.global;
+package com.example.itbooks.global.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
