@@ -53,13 +53,13 @@ public class BookClient {
     /**
      * 찾고자하는 책을 리턴한다.
      *
-     * @param query     검색하고자하는 조건
-     * @param index     검색 페이지 인덱스
-     * @param maxResult 최대 노출 결과
+     * @param query      검색하고자하는 조건
+     * @param index      검색 페이지 인덱스
+     * @param maxResults 최대 노출 결과
      * @return 검색된 책
      */
-    public BookResponseDto getSearchBooks(String query, int index, int maxResult) {
-        return convertToResponse(findBookByQuery(query, index, maxResult));
+    public BookResponseDto getSearchBooks(String query, int index, int maxResults) {
+        return convertToResponse(findBookByQuery(query, index, maxResults));
     }
 
     /**
@@ -106,14 +106,14 @@ public class BookClient {
         return items;
     }
 
-    private String findBookByQuery(String query, int index, int maxResult) {
+    private String findBookByQuery(String query, int index, int maxResults) {
         String items = null;
         try {
             items = webClient.get()
                     .uri(builder -> builder.path(SearchType.SEARCH.getUrl())
                             .queryParam("query", query)
                             .queryParam("start", index)
-                            .queryParam("maxResults", maxResult)
+                            .queryParam("maxResults", maxResults)
                             .queryParam("sort", SortType.POPULAR)
                             .queryParam("categoryId", IT_CATEGORY)
                             .queryParam("output", "json")
