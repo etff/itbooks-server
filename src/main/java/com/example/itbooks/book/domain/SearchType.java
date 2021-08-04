@@ -15,8 +15,11 @@ public enum SearchType {
     /**
      * 책 검색
      */
-    BOOK_ID("/search.api"),
+    SEARCH("/search.api"),
 
+    /**
+     * 새로운 책
+     */
     NEW_BOOK("/newBook.api");
 
 
