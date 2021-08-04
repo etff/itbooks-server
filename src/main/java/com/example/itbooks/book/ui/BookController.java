@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -26,7 +27,7 @@ public class BookController {
     }
 
     /**
-     * 찾고자하는 책을 리턴한다.
+     * 찾고자하는 식별자의 책을 리턴한다.
      */
     @GetMapping("/{id}")
     public BookResponseDto getBook(@PathVariable Long id) {
@@ -39,5 +40,14 @@ public class BookController {
     @GetMapping("/recommend")
     public BookResponseDto getRecommendBooks() {
         return bookService.getRecommendBooks();
+    }
+
+    @GetMapping("/search")
+    public BookResponseDto getSearchBooks(
+            @RequestParam String query,
+            @RequestParam(defaultValue = "1") int index,
+            @RequestParam(defaultValue = "10") int maxResult
+    ) {
+        return bookService.getSearchBooks(query, index, maxResult);
     }
 }

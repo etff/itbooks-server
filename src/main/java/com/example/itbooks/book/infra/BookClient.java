@@ -1,6 +1,7 @@
 package com.example.itbooks.book.infra;
 
 import com.example.itbooks.book.domain.SearchType;
+import com.example.itbooks.book.domain.SortType;
 import com.example.itbooks.book.dto.BookResponseDto;
 import com.example.itbooks.global.properties.InterparkProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,7 +19,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Component
 public class BookClient {
     private static final int IT_CATEGORY = 122;
-    private static final String PRODUCT_NUMBER = "productNumber";
+    private static final String ISBN = "isbn";
 
     private final InterparkProperties properties;
     private final WebClient webClient;
@@ -41,12 +42,24 @@ public class BookClient {
     }
 
     /**
-     * 찾고자 하는 책을 리턴한다.
+     * 찾고자 하는 식별자의 책을 리턴한다.
      *
      * @param id 책의 식별자
      */
     public BookResponseDto getBook(Long id) {
-        return convertToResponse(findBook(id));
+        return convertToResponse(findBookById(id));
+    }
+
+    /**
+     * 찾고자하는 책을 리턴한다.
+     *
+     * @param query     검색하고자하는 조건
+     * @param index     검색 페이지 인덱스
+     * @param maxResult 최대 노출 결과
+     * @return 검색된 책
+     */
+    public BookResponseDto getSearchBooks(String query, int index, int maxResult) {
+        return convertToResponse(findBookByQuery(query, index, maxResult));
     }
 
     private String findBooks(String searchType) {
@@ -66,13 +79,34 @@ public class BookClient {
         return items;
     }
 
-    private String findBook(Long id) {
+    private String findBookById(Long id) {
         String items = null;
         try {
             items = webClient.get()
-                    .uri(builder -> builder.path(SearchType.BOOK_ID.getUrl())
+                    .uri(builder -> builder.path(SearchType.SEARCH.getUrl())
                             .queryParam("query", id)
-                            .queryParam("queryType", PRODUCT_NUMBER)
+                            .queryParam("queryType", ISBN)
+                            .queryParam("categoryId", IT_CATEGORY)
+                            .queryParam("output", "json")
+                            .queryParam("key", properties.getKey()).build())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .retrieve()
+                    .bodyToMono(String.class).block();
+        } catch (Exception e) {
+            log.info(e.getMessage());
+        }
+        return items;
+    }
+
+    private String findBookByQuery(String query, int index, int maxResult) {
+        String items = null;
+        try {
+            items = webClient.get()
+                    .uri(builder -> builder.path(SearchType.SEARCH.getUrl())
+                            .queryParam("query", query)
+                            .queryParam("start", index)
+                            .queryParam("maxResults", maxResult)
+                            .queryParam("sort", SortType.POPULAR)
                             .queryParam("categoryId", IT_CATEGORY)
                             .queryParam("output", "json")
                             .queryParam("key", properties.getKey()).build())

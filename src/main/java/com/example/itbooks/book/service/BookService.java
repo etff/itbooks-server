@@ -37,4 +37,8 @@ public class BookService {
     public BookResponseDto getRecommendBooks() {
         return bookClient.getRecommendBooks();
     }
+
+    public BookResponseDto getSearchBooks(String query, int index, int maxResult) {
+        return bookClient.getSearchBooks(query, index, maxResult);
+    }
 }
