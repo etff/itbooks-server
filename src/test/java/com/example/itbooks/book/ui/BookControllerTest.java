@@ -216,7 +216,7 @@ class BookControllerTest {
             BookResponseDto bookResponse;
             final String query = "파이썬";
             final int index = 1;
-            final int maxResult = 10;
+            final int maxResults = 10;
 
             @BeforeEach
             void setUp() {
@@ -229,7 +229,7 @@ class BookControllerTest {
                 bookResponse = BookResponseDto.builder()
                         .item(Arrays.asList(item1, item2))
                         .build();
-                given(bookService.getSearchBooks(query, index, maxResult))
+                given(bookService.getSearchBooks(query, index, maxResults))
                         .willReturn(bookResponse);
             }
 
@@ -239,7 +239,7 @@ class BookControllerTest {
                 mockMvc.perform(get("/api/v1/books/search")
                         .param("query", query)
                         .param("index", String.valueOf(index))
-                        .param("maxResult", String.valueOf(maxResult))
+                        .param("maxResults", String.valueOf(maxResults))
                 )
                         .andExpect(status().isOk())
                         .andExpect(content().string(objectMapper.writeValueAsString(bookResponse)));
