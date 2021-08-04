@@ -62,6 +62,14 @@ public class BookClient {
         return convertToResponse(findBookByQuery(query, index, maxResult));
     }
 
+    /**
+     * 새로 나온 책을 리턴한다.
+     */
+    public BookResponseDto getNewBooks() {
+        final String url = SearchType.NEW_BOOK.getUrl();
+        return convertToResponse(findBooks(url));
+    }
+
     private String findBooks(String searchType) {
         String items = null;
         try {

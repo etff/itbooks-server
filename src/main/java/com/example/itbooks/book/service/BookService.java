@@ -38,7 +38,22 @@ public class BookService {
         return bookClient.getRecommendBooks();
     }
 
+    /**
+     * 검색하고자하는 책을 리턴한다.
+     *
+     * @param query     검색어
+     * @param index     목록의 인덱스
+     * @param maxResult 최대 노출 갯수
+     * @return 검색하고자하는 책
+     */
     public BookResponseDto getSearchBooks(String query, int index, int maxResult) {
         return bookClient.getSearchBooks(query, index, maxResult);
+    }
+
+    /**
+     * 새로 발간된 책을 리턴한다.
+     */
+    public BookResponseDto getNewBooks() {
+        return bookClient.getNewBooks();
     }
 }

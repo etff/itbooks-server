@@ -97,4 +97,27 @@ class BookServiceTest {
         // then
         assertThat(actual).isEqualTo(bookResponse);
     }
+
+    @DisplayName("getNewBooks 메서드는 신규 서적을 리턴한다.")
+    @Test
+    void getNewBooks() {
+        // given
+        ItemResponseDto item1 = ItemResponseDto.builder()
+                .title("clean code")
+                .build();
+        ItemResponseDto item2 = ItemResponseDto.builder()
+                .title("effective java")
+                .build();
+        bookResponse = BookResponseDto.builder()
+                .item(Arrays.asList(item1, item2))
+                .build();
+        given(bookService.getNewBooks())
+                .willReturn(bookResponse);
+
+        // when
+        BookResponseDto actual = bookService.getNewBooks();
+
+        // then
+        assertThat(actual).isEqualTo(bookResponse);
+    }
 }

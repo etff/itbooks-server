@@ -42,6 +42,14 @@ public class BookController {
         return bookService.getRecommendBooks();
     }
 
+    /**
+     * 검색하고자하는 책을 리턴한다.
+     *
+     * @param query     검색어
+     * @param index     검색 목록의 인덱스
+     * @param maxResult 최대 노출 갯수
+     * @return 찾고하는 하는 책
+     */
     @GetMapping("/search")
     public BookResponseDto getSearchBooks(
             @RequestParam String query,
@@ -49,5 +57,13 @@ public class BookController {
             @RequestParam(defaultValue = "10") int maxResult
     ) {
         return bookService.getSearchBooks(query, index, maxResult);
+    }
+
+    /**
+     * 신규 발간된 책을 리턴한다.
+     */
+    @GetMapping("/new")
+    public BookResponseDto getNewBooks() {
+        return bookService.getNewBooks();
     }
 }
