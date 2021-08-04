@@ -40,4 +40,12 @@ public class BookController {
     public BookResponseDto getRecommendBooks() {
         return bookService.getRecommendBooks();
     }
+
+    /**
+     * 신규 발간된 책을 리턴한다.
+     */
+    @GetMapping("/new")
+    public BookResponseDto getNewBooks() {
+        return bookService.getNewBooks();
+    }
 }
