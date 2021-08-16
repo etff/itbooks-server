@@ -30,7 +30,7 @@ public class JwtUtil {
     public JwtUtil(JwtProperties jwtProperties) {
         this.jwtProperties = jwtProperties;
         this.key = Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes());
-        this.validityInMilliseconds = validityInMilliseconds;
+        this.validityInMilliseconds = jwtProperties.getExpire();
         this.time = LocalDateTime.now();
     }
 
