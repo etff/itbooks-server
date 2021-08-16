@@ -6,10 +6,12 @@ import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @EnableConfigurationProperties({
-        InterparkProperties.class
+        InterparkProperties.class,
+        JwtProperties.class
 })
 @PropertySource({
-        "classpath:properties/interpark.properties"
+        "classpath:properties/interpark.properties",
+        "classpath:properties/jwt.properties"
 })
 public class PropertiesConfiguration {
 }
