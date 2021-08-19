@@ -2,7 +2,9 @@ package com.example.itbooks.user.ui;
 
 import com.example.itbooks.common.BaseControllerTest;
 import com.example.itbooks.user.application.UserService;
+import com.example.itbooks.user.dto.UserModificationData;
 import com.example.itbooks.user.dto.UserRegistrationData;
+import com.example.itbooks.user.dto.UserResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -10,14 +12,19 @@ import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.snippet.Attributes.attributes;
 import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -25,10 +32,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class UserControllerTest extends BaseControllerTest {
-    private static final String VALID_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY0MDk2MjgwMCwiZXh" +
-            "wIjoxNjQwOTYzMTAwfQ.2siRnBJmRU2JXjZY0CkQMgnCHRJN4Dld4_wG6R7T-HQ";
-    private static final String INVALID_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
-            "eyJ1c2VySWQiOjF9.ZZ3CUl0jxeLGvQ1Js5nG2Ty5qGTlqai5ubDMXZOdaD0";
+    private static final String MY_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
+            "eyJ1c2VySWQiOjF9.ZZ3CUl0jxeLGvQ1Js5nG2Ty5qGTlqai5ubDMXZOdaDk";
+    private static final String OTHER_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
+            "eyJ1c2VySWQiOjJ9.TEM6MULsZeqkBbUKziCR4Dg_8kymmZkyxsCXlfNJ3g0";
+    private static final String ADMIN_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
+            "eyJ1c2VySWQiOjEwMDR9.3GV5ZH3flBf0cnaXQCNNZlT4mgyFyBUhn3LKzQohh1A";
 
     private static Long GIVEN_ID = 1L;
     private static Long NOT_EXISTED_ID = -1L;
@@ -48,7 +57,12 @@ class UserControllerTest extends BaseControllerTest {
                 .email(GIVEN_EMAIL)
                 .password(GIVEN_PASSWORD)
                 .build();
-        given(userService.registerUser(any(UserRegistrationData.class))).willReturn(GIVEN_ID);
+        UserResponse userResponse = UserResponse
+                .builder()
+                .id(GIVEN_ID)
+                .build();
+        given(userService.registerUser(any(UserRegistrationData.class)))
+                .willReturn(userResponse);
 
         mockMvc.perform(
                         RestDocumentationRequestBuilders.
@@ -79,6 +93,65 @@ class UserControllerTest extends BaseControllerTest {
                 );
 
         verify(userService).registerUser(any(UserRegistrationData.class));
+    }
+
+    @Test
+    void updateUserWithValidAttributes() throws Exception {
+        UserModificationData updateDto = UserModificationData.builder()
+                .name(UPDATE_NAME)
+                .build();
+        UserResponse userResponse = UserResponse.builder()
+                .id(GIVEN_ID)
+                .name(UPDATE_NAME)
+                .email(GIVEN_EMAIL)
+                .build();
+
+        given(
+                userService.updateUser(
+                        eq(GIVEN_ID),
+                        any(UserModificationData.class)
+                )
+        )
+                .will(invocation -> {
+                    Long id = invocation.getArgument(0);
+                    UserModificationData modificationData =
+                            invocation.getArgument(1);
+                    return UserResponse.builder()
+                            .id(id)
+                            .email(GIVEN_EMAIL)
+                            .name(modificationData.getName())
+                            .build();
+                });
+
+        mockMvc.perform(
+                        RestDocumentationRequestBuilders.
+                                patch("/api/v1/users/{id}", GIVEN_ID)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsBytes(updateDto))
+                                .header("Authorization", "Bearer " + MY_TOKEN)
+                )
+                .andExpect(status().isOk())
+                .andExpect(content().string(objectMapper.writeValueAsString(userResponse)))
+                .andDo(print())
+                .andDo(document("update-user",
+                        requestHeaders(headerWithName("Authorization").description("JWT 토큰")),
+                        pathParameters(
+                                parameterWithName("id").description("사용자 식별자")
+                        ),
+                        requestFields(
+                                attributes(key("user").value("Fields for user creation")),
+                                fieldWithPath("name").type(STRING).description("사용자 이름")
+                                        .attributes(key("constraints").value("한 글자 이상 입력해야합니다."))
+                        ),
+                        responseFields(
+                                fieldWithPath("id").type(NUMBER).description("사용자 식별자"),
+                                fieldWithPath("email").type(STRING).description("사용자 이메일"),
+                                fieldWithPath("name").type(STRING).description("사용자 이름")
+                        ))
+                );
+
+        verify(userService)
+                .updateUser(eq(GIVEN_ID), any(UserModificationData.class));
     }
 }
 

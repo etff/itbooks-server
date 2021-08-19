@@ -16,6 +16,7 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
 import javax.servlet.Filter;
 
+
 /**
  * Spring Security 설정.
  */
@@ -46,8 +47,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/auth").permitAll()
                 .antMatchers("/api/v1/books/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
-                .antMatchers(HttpMethod.PATCH, "/api/v1/user/{id}")
-                .access("@authenticationGuard.checkIdMatch(authentication,#id)")
+                .antMatchers(HttpMethod.PATCH, "/api/v1/users/{id}")
+                .access("@authenticationGuard.checkIdMatch(authentication,#id) and hasAnyRole('USER', 'ADMIN')")
+                .antMatchers(HttpMethod.DELETE, "/api/v1/users/{id}").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement()

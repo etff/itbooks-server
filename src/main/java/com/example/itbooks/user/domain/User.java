@@ -66,10 +66,10 @@ public class User {
     /**
      * 사용자의 정보를 갱신합니다.
      *
-     * @param source 사용자 갱신 정보
+     * @param name 사용자 갱신 정보
      */
-    public void changeWith(User source) {
-        name = source.name;
+    public void changeWith(String name) {
+        this.name = name;
     }
 
     /**

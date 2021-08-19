@@ -3,7 +3,9 @@ package com.example.itbooks.user.application;
 import com.example.itbooks.global.utils.CustomPasswordEncoder;
 import com.example.itbooks.user.domain.Role;
 import com.example.itbooks.user.domain.User;
+import com.example.itbooks.user.dto.UserModificationData;
 import com.example.itbooks.user.dto.UserRegistrationData;
+import com.example.itbooks.user.dto.UserResponse;
 import com.example.itbooks.user.infra.RoleRepository;
 import com.example.itbooks.user.infra.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +29,7 @@ public class UserService {
      * @return 사용자 식별자
      */
     @Transactional
-    public Long registerUser(UserRegistrationData dto) {
+    public UserResponse registerUser(UserRegistrationData dto) {
         final String email = dto.getEmail();
         if (userRepository.existsByEmail(email)) {
             throw new EmailDuplicationException(email);
@@ -37,6 +39,35 @@ public class UserService {
         final User saved = userRepository.save(user);
         roleRepository.save(new Role(saved.getId(), "USER"));
 
-        return saved.getId();
+        return UserResponse.builder()
+                .id(saved.getId())
+                .build();
+    }
+
+    /**
+     * 등록된 사용자 정보를 갱신하고, 생신된 정보를 리턴합니다.
+     *
+     * @param id               등록된 사용자 식별자
+     * @param modificationData 갱신할 사용자 정보
+     * @return 갱신된 사용자 정보
+     */
+    @Transactional
+    public UserResponse updateUser(Long id, UserModificationData modificationData) {
+        User findUser = findUser(id);
+        findUser.changeWith(modificationData.getName());
+        return UserResponse.builder()
+                .id(id)
+                .name(modificationData.getName())
+                .email(findUser.getEmail())
+                .build();
+    }
+
+    private User findUser(Long id) {
+        return userRepository.findByIdAndDeletedIsFalse(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+    }
+
+    public void deleteUser(Long id) {
+
     }
 }

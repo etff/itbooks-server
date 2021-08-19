@@ -4,6 +4,7 @@ import com.example.itbooks.auth.application.InvalidTokenException;
 import com.example.itbooks.auth.application.LoginFailException;
 import com.example.itbooks.auth.application.LoginNotFoundException;
 import com.example.itbooks.user.application.EmailDuplicationException;
+import com.example.itbooks.user.application.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -45,6 +46,12 @@ public class GlobalExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(EmailDuplicationException.class)
     public ErrorResponse handleUserEmailIsAlreadyExisted(Exception e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(UserNotFoundException.class)
+    public ErrorResponse handleUserNotFound(Exception e) {
         return new ErrorResponse(e.getMessage());
     }
 }
