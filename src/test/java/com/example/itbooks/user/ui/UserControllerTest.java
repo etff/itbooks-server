@@ -40,17 +40,21 @@ public class UserControllerTest extends BaseControllerTest {
 
     @MockBean
     private UserService userService;
-    
+
     @Test
     void registerUserWithValidAttributes() throws Exception {
+        UserRegistrationData dto = UserRegistrationData.builder()
+                .name(GIVEN_NAME)
+                .email(GIVEN_EMAIL)
+                .password(GIVEN_PASSWORD)
+                .build();
         given(userService.registerUser(any(UserRegistrationData.class))).willReturn(GIVEN_ID);
 
         mockMvc.perform(
                         RestDocumentationRequestBuilders.
                                 post("/api/v1/users")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content("{\"email\":\"tester@example.com\"," +
-                                        "\"name\":\"Tester\",\"password\":\"test\"}")
+                                .content(objectMapper.writeValueAsBytes(dto))
                 )
                 .andExpect(status().isCreated())
                 .andExpect(content().string(

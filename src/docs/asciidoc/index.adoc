@@ -63,6 +63,10 @@ HTTP 상태 코드는 표준 HTTP와 REST 규약을 따릅니다.
 | 요청한 리소스가 없음.
 |===
 
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+
 [[User]]
 == User
 
@@ -77,18 +81,17 @@ CURL:
 
 include::{path}/curl-request.adoc[]
 
-Request Path Parameters:
-
-include::{path}/request-fields.adoc[]
-
 Request HTTP Example:
 include::{path}/http-request.adoc[]
 
-==== Response
+Request Fields:
+include::{path}/request-fields.adoc[]
 
-Response Fields:
-include::{path}/response-fields.adoc[]
+==== Response
 
 Response HTTP Example:
 
 include::{path}/http-response.adoc[]
+
+Response Fields:
+include::{path}/response-fields.adoc[]

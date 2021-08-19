@@ -34,8 +34,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.csrf()
                 .disable()
-                .cors()
-                .and()
                 .headers()
                 .frameOptions()
                 .sameOrigin()
@@ -67,6 +65,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/static/**")
                 .antMatchers("/favicon.ico")
                 .antMatchers("/manifest.json")
-                .antMatchers("/docs/index/html");
+                .antMatchers("/docs/index.html");
     }
 }
