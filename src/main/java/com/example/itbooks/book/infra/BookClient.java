@@ -18,8 +18,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Slf4j
 @Component
 public class BookClient {
-    private static final int IT_CATEGORY = 122;
     private static final String ISBN = "isbn";
+    private static final String RESPONSE_OUTPUT = "output";
+    private static final int IT_CATEGORY = 122;
+    private static final String SEARCH_CATEGORY = "categoryId";
 
     private final InterparkProperties properties;
     private final WebClient webClient;
@@ -75,8 +77,8 @@ public class BookClient {
         try {
             items = webClient.get()
                     .uri(builder -> builder.path(searchType)
-                            .queryParam("categoryId", IT_CATEGORY)
-                            .queryParam("output", "json")
+                            .queryParam(SEARCH_CATEGORY, IT_CATEGORY)
+                            .queryParam(RESPONSE_OUTPUT, "json")
                             .queryParam("key", properties.getKey()).build())
                     .accept(MediaType.APPLICATION_JSON)
                     .retrieve()
@@ -94,8 +96,8 @@ public class BookClient {
                     .uri(builder -> builder.path(SearchType.SEARCH.getUrl())
                             .queryParam("query", id)
                             .queryParam("queryType", ISBN)
-                            .queryParam("categoryId", IT_CATEGORY)
-                            .queryParam("output", "json")
+                            .queryParam(SEARCH_CATEGORY, IT_CATEGORY)
+                            .queryParam(RESPONSE_OUTPUT, "json")
                             .queryParam("key", properties.getKey()).build())
                     .accept(MediaType.APPLICATION_JSON)
                     .retrieve()
@@ -115,8 +117,8 @@ public class BookClient {
                             .queryParam("start", index)
                             .queryParam("maxResults", maxResults)
                             .queryParam("sort", SortType.POPULAR)
-                            .queryParam("categoryId", IT_CATEGORY)
-                            .queryParam("output", "json")
+                            .queryParam(SEARCH_CATEGORY, IT_CATEGORY)
+                            .queryParam(RESPONSE_OUTPUT, "json")
                             .queryParam("key", properties.getKey()).build())
                     .accept(MediaType.APPLICATION_JSON)
                     .retrieve()
