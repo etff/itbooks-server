@@ -13,6 +13,9 @@ spring:
         format_sql: true
         default_batch_fetch_size: 100
     generate-ddl: true
+  h2:
+    console:
+      enabled: true
   config:
     activate:
       on-profile: local
