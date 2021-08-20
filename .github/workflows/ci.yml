@@ -24,9 +24,13 @@ jobs:
       - name: properties
         env:
           INTERPARK_API_KEY: ${{ secrets.INTERPARK_API_KEY }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_EXPIRE: ${{ secrets.JWT_EXPIRE }}
         run: |
           mkdir src/main/resources/properties
           echo $INTERPARK_API_KEY >> src/main/resources/properties/interpark.properties
+          echo $JWT_SECRET >> src/main/resources/properties/jwt.properties
+          echo $JWT_EXPIRE >> src/main/resources/properties/jwt.properties
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle

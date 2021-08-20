@@ -1,8 +1,10 @@
 package com.example.itbooks.book.ui;
 
+import com.example.itbooks.auth.application.AuthenticationService;
+import com.example.itbooks.book.application.BookService;
 import com.example.itbooks.book.dto.BookResponseDto;
 import com.example.itbooks.book.dto.ItemResponseDto;
-import com.example.itbooks.book.service.BookService;
+import com.example.itbooks.user.application.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -36,6 +38,12 @@ class BookControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @MockBean
+    private AuthenticationService authenticationService;
+
+    @MockBean
+    private UserService userService;
 
     @Nested
     @DisplayName("GET /popluar 는")
@@ -256,10 +264,10 @@ class BookControllerTest {
             @Test
             void It_responds_bad_request() throws Exception {
                 mockMvc.perform(get("/api/v1/books/search")
-                        .param("index", String.valueOf(index))
-                        .param("maxResult", String.valueOf(maxResult))
-                )
-                        .andExpect(status().isBadRequest());
+                                .param("index", String.valueOf(index))
+                                .param("maxResult", String.valueOf(maxResult))
+                        )
+                        .andExpect(status().is5xxServerError());
             }
         }
     }

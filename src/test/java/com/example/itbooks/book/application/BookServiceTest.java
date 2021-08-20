@@ -1,4 +1,4 @@
-package com.example.itbooks.book.service;
+package com.example.itbooks.book.application;
 
 import com.example.itbooks.book.dto.BookResponseDto;
 import com.example.itbooks.book.dto.ItemResponseDto;
