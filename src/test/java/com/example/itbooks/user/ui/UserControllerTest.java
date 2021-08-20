@@ -5,6 +5,7 @@ import com.example.itbooks.user.application.UserService;
 import com.example.itbooks.user.dto.UserModificationData;
 import com.example.itbooks.user.dto.UserRegistrationData;
 import com.example.itbooks.user.dto.UserResponse;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -50,6 +51,7 @@ class UserControllerTest extends BaseControllerTest {
     @MockBean
     private UserService userService;
 
+    @DisplayName("사용자의 정보를 등록합니다.")
     @Test
     void registerUserWithValidAttributes() throws Exception {
         UserRegistrationData dto = UserRegistrationData.builder()
@@ -95,6 +97,7 @@ class UserControllerTest extends BaseControllerTest {
         verify(userService).registerUser(any(UserRegistrationData.class));
     }
 
+    @DisplayName("사용자의 정보를 갱신합니다.")
     @Test
     void updateUserWithValidAttributes() throws Exception {
         UserModificationData updateDto = UserModificationData.builder()
@@ -152,6 +155,26 @@ class UserControllerTest extends BaseControllerTest {
 
         verify(userService)
                 .updateUser(eq(GIVEN_ID), any(UserModificationData.class));
+    }
+
+    @DisplayName("사용자의 정보를 삭제합니다.")
+    @Test
+    void destroyWithExistedId() throws Exception {
+        mockMvc.perform(
+                        RestDocumentationRequestBuilders.
+                                delete("/api/v1/users/{id}", GIVEN_ID)
+                                .header("Authorization", "Bearer " + ADMIN_TOKEN)
+                )
+                .andExpect(status().isNoContent())
+                .andDo(print())
+                .andDo(document("delete-user",
+                        requestHeaders(headerWithName("Authorization").description("JWT 토큰")),
+                        pathParameters(
+                                parameterWithName("id").description("사용자 식별자")
+                        )
+                ));
+
+        verify(userService).deleteUser(1L);
     }
 }
 

@@ -95,3 +95,65 @@ include::{path}/http-response.adoc[]
 
 Response Fields:
 include::{path}/response-fields.adoc[]
+
+
+=== Update /users/{id}
+
+사용자 정보 갱신하고 갱신 정보를 돌려준다.
+
+==== Request
+:path: {snippets}/update-user
+
+CURL:
+
+include::{path}/curl-request.adoc[]
+
+Request Header:
+include::{path}/request-headers.adoc[]
+
+Request Path Parameters:
+
+include::{path}/request-fields.adoc[]
+
+Request Fields:
+
+include::{path}/request-fields.adoc[]
+
+Request HTTP Example:
+include::{path}/http-request.adoc[]
+
+==== Response
+
+Response Fields:
+include::{path}/response-fields.adoc[]
+
+Response HTTP Example:
+
+include::{path}/http-response.adoc[]
+
+=== Delete /users/{id}
+
+사용자를 삭제한다.
+
+==== Request
+:path: {snippets}/delete-user
+
+CURL:
+
+include::{path}/curl-request.adoc[]
+
+Request Header:
+include::{path}/request-headers.adoc[]
+
+Request Path Parameters:
+
+include::{path}/path-parameters.adoc[]
+
+Request HTTP Example:
+include::{path}/http-request.adoc[]
+
+==== Response
+
+Response HTTP Example:
+
+include::{path}/http-response.adoc[]
