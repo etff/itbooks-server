@@ -64,11 +64,28 @@ public class UserService {
 
     /**
      * 등록된 사용자를 삭제한다.
+     *
      * @param id 등록된 사용자 식별자
      */
     public void deleteUser(Long id) throws UserNotFoundException {
         User user = findUser(id);
         user.destroy();
+    }
+
+    /**
+     * 사용자의 정보를 리턴한다.
+     *
+     * @param id 등록된 사용자 식별자
+     * @return 등록된 사용자 정보
+     */
+    public UserResponse getUser(Long id) {
+        final User user = findUser(id);
+        return UserResponse.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .isAuth(true)
+                .build();
     }
 
     private User findUser(Long id) {

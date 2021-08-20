@@ -157,3 +157,27 @@ include::{path}/http-request.adoc[]
 Response HTTP Example:
 
 include::{path}/http-response.adoc[]
+
+=== GET /users/me
+
+로그인한 사용자를 정보를 가져온다
+
+==== Request
+:path: {snippets}/myinfo
+
+CURL:
+
+include::{path}/curl-request.adoc[]
+
+Request Header:
+include::{path}/request-headers.adoc[]
+
+
+Request HTTP Example:
+include::{path}/http-request.adoc[]
+
+==== Response
+
+Response HTTP Example:
+
+include::{path}/http-response.adoc[]

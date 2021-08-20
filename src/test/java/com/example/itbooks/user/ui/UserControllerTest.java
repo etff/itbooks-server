@@ -19,7 +19,9 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.JsonFieldType.BOOLEAN;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
+import static org.springframework.restdocs.payload.JsonFieldType.OBJECT;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
@@ -30,6 +32,7 @@ import static org.springframework.restdocs.snippet.Attributes.attributes;
 import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class UserControllerTest extends BaseControllerTest {
@@ -90,7 +93,10 @@ class UserControllerTest extends BaseControllerTest {
                         responseFields(
                                 fieldWithPath("id").type(NUMBER).description("사용자 식별자"),
                                 fieldWithPath("email").type(STRING).ignored(),
-                                fieldWithPath("name").type(STRING).ignored()
+                                fieldWithPath("name").type(STRING).ignored(),
+                                fieldWithPath("role").type(OBJECT).ignored(),
+                                fieldWithPath("auth").type(BOOLEAN).ignored(),
+                                fieldWithPath("admin").type(BOOLEAN).ignored()
                         ))
                 );
 
@@ -149,7 +155,10 @@ class UserControllerTest extends BaseControllerTest {
                         responseFields(
                                 fieldWithPath("id").type(NUMBER).description("사용자 식별자"),
                                 fieldWithPath("email").type(STRING).description("사용자 이메일"),
-                                fieldWithPath("name").type(STRING).description("사용자 이름")
+                                fieldWithPath("name").type(STRING).description("사용자 이름"),
+                                fieldWithPath("role").type(OBJECT).ignored(),
+                                fieldWithPath("auth").type(BOOLEAN).ignored(),
+                                fieldWithPath("admin").type(BOOLEAN).ignored()
                         ))
                 );
 
@@ -175,6 +184,46 @@ class UserControllerTest extends BaseControllerTest {
                 ));
 
         verify(userService).deleteUser(1L);
+    }
+
+    @DisplayName("로그인한 사용자 정보 가져오기")
+    @Test
+    void detailWithLoginUser() throws Exception {
+        given(userService.getUser(GIVEN_ID))
+                .willReturn(
+                        UserResponse.builder()
+                                .id(GIVEN_ID)
+                                .email(GIVEN_EMAIL)
+                                .name(GIVEN_NAME)
+                                .isAuth(true)
+                                .build()
+                );
+        given(authenticationService.parseToken(MY_TOKEN))
+                .willReturn(GIVEN_ID);
+
+        mockMvc
+                .perform(
+                        RestDocumentationRequestBuilders
+                                .get("/api/v1/users/me")
+                                .header("Authorization", "Bearer " + MY_TOKEN))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(GIVEN_NAME)))
+                .andExpect(content().string(containsString(GIVEN_EMAIL)))
+                .andExpect(jsonPath("id").exists())
+                .andExpect(jsonPath("name").exists())
+                .andExpect(jsonPath("email").exists())
+                .andExpect(content().string(containsString(GIVEN_NAME)))
+                .andDo(document("myinfo",
+                        requestHeaders(headerWithName("Authorization").description("JWT 토큰")),
+                        responseFields(
+                                fieldWithPath("id").type(NUMBER).description("사용자 식별자"),
+                                fieldWithPath("name").type(STRING).description("사용자 이름"),
+                                fieldWithPath("email").type(STRING).description("사용자 이메일"),
+                                fieldWithPath("auth").type(BOOLEAN).description("인증 여부"),
+                                fieldWithPath("role").type(OBJECT).ignored(),
+                                fieldWithPath("admin").type(BOOLEAN).ignored()
+                        ))
+                );
     }
 }
 

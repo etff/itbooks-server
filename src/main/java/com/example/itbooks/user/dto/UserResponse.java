@@ -1,5 +1,6 @@
 package com.example.itbooks.user.dto;
 
+import com.example.itbooks.user.domain.Role;
 import com.example.itbooks.user.domain.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,11 +26,20 @@ public class UserResponse {
      */
     private String email;
 
+    private boolean isAuth;
+
+    private boolean isAdmin;
+
+    private Role role;
+
     @Builder
-    public UserResponse(Long id, String name, String email) {
+    public UserResponse(Long id, String name, String email, boolean isAuth, boolean isAdmin, Role role) {
         this.id = id;
         this.name = name;
         this.email = email;
+        this.isAuth = isAuth;
+        this.isAdmin = isAdmin;
+        this.role = role;
     }
 
     /**
